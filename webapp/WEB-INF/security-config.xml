@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+<security:http auto-config="true">
+	
+		<security:form-login login-page="/welcome.jsf" default-target-url="/home.jsf" />
+		<security:logout />
+	</security:http>
+	
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="adminService">
+			<security:password-encoder hash="md5" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+	<bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<property name="userDetailsService" ref="adminService" />
+		<property name="hideUserNotFoundExceptions" value="false" />
+	</bean>
+	
+	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+		<constructor-arg>
+			<ref bean="daoAuthenticationProvider" />
+		</constructor-arg>
+	</bean>
+</beans>
